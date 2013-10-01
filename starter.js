@@ -3,7 +3,6 @@ var fs = require('fs');
 var cpus = require('os').cpus();
 var os = require('os');
 var settings = require('settings');
-var conf = new settings(require('./conf.json'), {env: 'development'});
 var watch = require('watch');
 var path = require('path');
 var browserify = require('browserify');
@@ -11,12 +10,25 @@ var bower =  require('bower-json');
 var compressor = require('node-minify');
 var UglifyJS = require("uglify-js");
 var bowerrc = JSON.parse(fs.readFileSync(path.normalize(__dirname+'/.bowerrc')));
-conf.development = (conf.environment == "development");
 var sslRuns = 0;
 var packages = [];
 var dead_list = [];
 var starter = {};
 
+starter.init = function(opts) {
+	if(!opts.file) {
+		throw new Error("No file defined.");
+		process.exit(0);
+	}
+	if(opts.env) {
+		options = opts.env;
+	} else {
+		options = {};
+	}
+	global.conf = new settings(require(path.normalize(opts.file)), options);
+	conf.development = (conf.environment == "development");
+	global.opts = opts;
+}
 numberofWorkers = (conf.launch_options.workers) ? conf.launch_options.workers : cpus.length;
 
 cluster.setupMaster({

@@ -1,10 +1,20 @@
 #!/usr/bin/env node
 
 var program = require('commander');
-
+var path = require('path');
+var starter = require('../starter.js');
 program
-	.usage('[options] <file ...>')
-	.parse(process.argv);
-if(program.length == 1 && program[0]) {
-	require('../starter.js');
+.usage('[options] <file ...>')
+.option('-env, --environment [development|test|production]', 'Set program env.')
+.parse(process.argv);
+console.log(path.dirname(process.cwd()+"/"+program.args[0]));
+if(program.length == 1 && program.args[0]) {
+	options = {
+		file: path.normalize(process.cwd()+"/"+program.args[0]),
+		dir: path.dirname(path.normalize(process.cwd()+"/"+program.args[0]))
+	};
+	if(program.env) {
+		options.env = program.env;
+	}
+	starter.init(options);
 }
