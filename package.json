@@ -19,6 +19,7 @@
     "buffer-crc32": "~0.2.1",
     "socket.io": "~0.9.16",
     "cli-color": "~0.2.3",
-    "settings": "~0.1.1"
+    "settings": "~0.1.1",
+    "redis": "~0.7.3"
   }
 }
