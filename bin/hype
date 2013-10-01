@@ -1,1 +1,10 @@
 #!/usr/bin/env node
+
+var program = require('commander');
+
+program
+	.usage('[options] <file ...>')
+	.parse(process.argv);
+if(program.length == 1 && program[0]) {
+	require('../starter.js');
+}
