@@ -1,6 +1,6 @@
 {
   "name": "hype",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Expressjs based cluster-load-balanced app with socket.io, redis, mongoskin.",
   "main": "main.js",
   "scripts": {
