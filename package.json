@@ -24,6 +24,6 @@
     "commander": "~2.0.0"
   },
   "bin": {
-    "express": "./bin/hype"
+    "hype": "./bin/hype"
   }
 }
