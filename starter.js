@@ -42,6 +42,7 @@ starter.init = function(opts) {
 		starter.compile_client_js(packages);
 	});
 	global.opts = opts;
+	starter.watch();
 }
 
 process.on('exit', function() {
