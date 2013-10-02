@@ -29,18 +29,26 @@ starter.init = function(opts) {
 	}
 	global.conf = new settings(require(path.normalize(opts.dir+"/conf.json")), options);
 	conf.development = (conf.environment == "development");
-	bowerrc = JSON.parse(fs.readFileSync(path.normalize(opts.dir+'/.bowerrc')));
+	bowerrc = fs.readFileSync(path.normalize(opts.dir+'/.bowerrc'));
+	if(!bowerrc) {
+		opts.bower = false;
+	} else {
+		bowerrc = JSON.parse(bowerrc);
+		opts.bower = true;
+	}
 	numberofWorkers = (conf.launch_options.workers) ? conf.launch_options.workers : cpus.length;
 	cluster.setupMaster({
 		exec : path.normalize(opts.file),
 		silent : true
 	});
-	bower(path.normalize(opts.dir+'/bower.json'), function(err, jsonData) {
-		for(var i in jsonData.dependencies) {
-			packages.push(path.normalize(opts.dir+"/"+bowerrc.directory+"/"+i));
-		}
-		starter.compile_client_js(packages);
-	});
+	if(opts.bower) {
+		bower(path.normalize(opts.dir+'/bower.json'), function(err, jsonData) {
+			for(var i in jsonData.dependencies) {
+				packages.push(path.normalize(opts.dir+"/"+bowerrc.directory+"/"+i));
+			}
+			starter.compile_client_js(packages);
+		});
+	}
 	global.opts = opts;
 	starter.watch();
 }
