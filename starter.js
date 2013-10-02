@@ -31,18 +31,17 @@ starter.init = function(opts) {
 	bowerrc = JSON.parse(fs.readFileSync(path.normalize(opts.dir+'/.bowerrc')));
 	numberofWorkers = (conf.launch_options.workers) ? conf.launch_options.workers : cpus.length;
 	cluster.setupMaster({
-		exec : path.normalize(__dirname+"/server.js"),
+		exec : path.normalize(opts.file),
 		silent : true
+	});
+	bower(path.normalize(opts.dir+'/bower.json'), function(err, jsonData) {
+		for(var i in jsonData.dependencies) {
+			packages.push(path.normalize(opts.dir+"/"+bowerrc.directory+"/"+i));
+		}
+		starter.compile_client_js(packages);
 	});
 	global.opts = opts;
 }
-
-bower(path.normalize(__dirname+'/bower.json'), function(err, jsonData) {
-	for(var i in jsonData.dependencies) {
-		packages.push(path.normalize(__dirname+"/"+bowerrc.directory+"/"+i));
-	}
-	starter.compile_client_js(packages);
-});
 
 process.on('exit', function() {
 	console.log('Shutting down workers.');
