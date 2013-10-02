@@ -5,15 +5,15 @@ var path = require('path');
 var starter = require('../starter.js');
 program
 .usage('[options] <file ...>')
-.option('-env, --environment [development|test|production]', 'Set program env.')
+.option('-e, --environment [development|test|production]', 'Set program env.')
 .parse(process.argv);
-if(!program[1] && program.args[0]) {
+if(!program.args[1] && program.args[0]) {
 	options = {
 		file: path.normalize(process.cwd()+"/"+program.args[0]),
 		dir: path.dirname(path.normalize(process.cwd()+"/"+program.args[0]))
 	};
-	if(program.env) {
-		options.env = program.env;
+	if(program.environment) {
+		options.env = program.environment;
 	}
 	starter.init(options);
 	starter.start();
