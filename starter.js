@@ -68,7 +68,6 @@ starter.start = function() {
 	for (var i = 0; i < numberofWorkers; i++) {
 		cluster.fork({"ssl": starter.use_ssl(), "NODE_ENV": (conf.development) ? "development" : "production"});
 	}
-
 	for (var i in cluster.workers){
 		cluster.workers[i].process.stdout.on('data', starter.outputData);
 		cluster.workers[i].process.stderr.on('data', starter.outputData);
@@ -198,3 +197,5 @@ setInterval(starter.count_dead, 5000);
 String.prototype.startsWith = function (str){
 	return this.slice(0, str.length) == str;
 };
+
+module.exports = starter;

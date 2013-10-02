@@ -7,8 +7,7 @@ program
 .usage('[options] <file ...>')
 .option('-env, --environment [development|test|production]', 'Set program env.')
 .parse(process.argv);
-console.log(path.dirname(process.cwd()+"/"+program.args[0]));
-if(program.length == 1 && program.args[0]) {
+if(!program[1] && program.args[0]) {
 	options = {
 		file: path.normalize(process.cwd()+"/"+program.args[0]),
 		dir: path.dirname(path.normalize(process.cwd()+"/"+program.args[0]))
@@ -16,5 +15,7 @@ if(program.length == 1 && program.args[0]) {
 	if(program.env) {
 		options.env = program.env;
 	}
+	console.log(options);
 	starter.init(options);
+	starter.start();
 }
