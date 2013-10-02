@@ -22,7 +22,8 @@ starter.init = function(opts) {
 		process.exit(0);
 	}
 	if(opts.env) {
-		options = opts.env;
+		options = {};
+		options.env = opts.env;
 	} else {
 		options = {};
 	}
