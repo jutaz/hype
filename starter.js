@@ -182,13 +182,12 @@ starter.compile_client_js = function(scripts) {
 			alljs.push(path.normalize(scripts[i]+path.sep+tmp.main));
 		}
 	}
-	alljs.push(path.normalize(__dirname+"/public/js/scripts.js"));
+	alljs.push(path.normalize(opts.dir+"/public/js/scripts.js"));
 	var result = UglifyJS.minify(alljs, {
 		outSourceMap: true,
-		sourceRoot: "//localhost/js/",
-		outSourceMap: path.normalize(__dirname+"/public/js/bundle.js.map"),
+		outSourceMap: path.normalize(opts.dir+"/public/js/bundle.js.map"),
 	});
-	fs.writeFileSync(path.normalize(__dirname+"/public/js/bundle.js"), result.code+"//@ sourceMappingURL=/js/bundle.js.map");
+	fs.writeFileSync(path.normalize(opts.dir+"/public/js/bundle.js"), result.code+"//@ sourceMappingURL=/js/bundle.js.map");
 }
 
 setInterval(starter.count_dead, 5000);
