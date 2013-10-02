@@ -85,41 +85,43 @@ cluster.on('exit', function(worker, code, signal) {
 
 });
 
-watch.createMonitor(path.normalize(__dirname), function (monitor) {
-	monitor.on("created", function (file, stat) {
-		if(starter.need_restart(file)) {
-			starter.restart_workers();
-		}
-	})
-	monitor.on("changed", function (file, curr, prev) {
-		if(starter.need_restart(file)) {
-			starter.restart_workers();
-		}
-	})
-	monitor.on("removed", function (file, stat) {
-		if(starter.need_restart(file)) {
-			starter.restart_workers();
-		}
-	})
-});
+starter.watch = function() {
+	watch.createMonitor(opts.dir, function (monitor) {
+		monitor.on("created", function (file, stat) {
+			if(starter.need_restart(file)) {
+				starter.restart_workers();
+			}
+		})
+		monitor.on("changed", function (file, curr, prev) {
+			if(starter.need_restart(file)) {
+				starter.restart_workers();
+			}
+		})
+		monitor.on("removed", function (file, stat) {
+			if(starter.need_restart(file)) {
+				starter.restart_workers();
+			}
+		})
+	});
 
-watch.createMonitor(path.normalize(__dirname+"/public/"), function (monitor) {
-	monitor.on("created", function (file, stat) {
-		if(file !== path.normalize(__dirname+"/public/js/bundle.js")) {
-			starter.compile_client_js(packages);
-		}
-	})
-	monitor.on("changed", function (file, curr, prev) {
-		if(file !== path.normalize(__dirname+"/public/js/bundle.js")) {
-			starter.compile_client_js(packages);
-		}
-	})
-	monitor.on("removed", function (file, stat) {
-		if(file !== path.normalize(__dirname+"/public/js/bundle.js")) {
-			starter.compile_client_js(packages);
-		}
-	})
-});
+	watch.createMonitor(path.normalize(opts.dir+"/public/"), function (monitor) {
+		monitor.on("created", function (file, stat) {
+			if(file !== path.normalize(opts.dir+"/public/js/bundle.js")) {
+				starter.compile_client_js(packages);
+			}
+		})
+		monitor.on("changed", function (file, curr, prev) {
+			if(file !== path.normalize(opts.dir+"/public/js/bundle.js")) {
+				starter.compile_client_js(packages);
+			}
+		})
+		monitor.on("removed", function (file, stat) {
+			if(file !== path.normalize(opts.dir+"/public/js/bundle.js")) {
+				starter.compile_client_js(packages);
+			}
+		})
+	});
+}
 
 starter.restart_workers = function(callback) {
 	for(var i in cluster.workers) {
@@ -141,7 +143,7 @@ starter.clusterError = function(err) {
 }
 
 starter.need_restart = function(file) {
-	cwd = __dirname+path.sep;
+	cwd = opts.dir+path.sep;
 	paths = [cwd+'main.js', cwd+'public', cwd+'.git']
 	for (var i in paths) {
 		if(file.startsWith(paths[i])) {
