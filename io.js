@@ -1,5 +1,5 @@
 var RedisStore = require('socket.io/lib/stores/redis');
-var redis  = require('socket.io/node_modules/redis');
+var redis  = require('redis');
 var pub    = redis.createClient();
 var sub    = redis.createClient();
 var client = redis.createClient();
