@@ -9,10 +9,11 @@ var browserify = require('browserify');
 var bower =  require('bower-json');
 var compressor = require('node-minify');
 var UglifyJS = require("uglify-js");
-var bowerrc = JSON.parse(fs.readFileSync(path.normalize(__dirname+'/.bowerrc')));
 var sslRuns = 0;
+var numberofWorkers = 0;
 var packages = [];
 var dead_list = [];
+var bowerrc;
 var starter = {};
 
 starter.init = function(opts) {
@@ -25,16 +26,16 @@ starter.init = function(opts) {
 	} else {
 		options = {};
 	}
-	global.conf = new settings(require(path.normalize(opts.file)), options);
+	global.conf = new settings(require(path.normalize(opts.dir+"/conf.json")), options);
 	conf.development = (conf.environment == "development");
+	bowerrc = JSON.parse(fs.readFileSync(path.normalize(opts.dir+'/.bowerrc')));
+	numberofWorkers = (conf.launch_options.workers) ? conf.launch_options.workers : cpus.length;
+	cluster.setupMaster({
+		exec : path.normalize(__dirname+"/server.js"),
+		silent : true
+	});
 	global.opts = opts;
 }
-numberofWorkers = (conf.launch_options.workers) ? conf.launch_options.workers : cpus.length;
-
-cluster.setupMaster({
-	exec : path.normalize(__dirname+"/server.js"),
-	silent : true
-});
 
 bower(path.normalize(__dirname+'/bower.json'), function(err, jsonData) {
 	for(var i in jsonData.dependencies) {
