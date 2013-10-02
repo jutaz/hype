@@ -189,7 +189,7 @@ starter.compile_client_js = function(scripts) {
 	fs.writeFileSync(path.normalize(__dirname+"/public/js/bundle.js"), result.code+"//@ sourceMappingURL=/js/bundle.js.map");
 }
 
-setInterval(count_dead, 5000);
+setInterval(starter.count_dead, 5000);
 
 
 String.prototype.startsWith = function (str){
