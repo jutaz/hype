@@ -3,11 +3,17 @@
 var program = require('commander');
 var path = require('path');
 var starter = require('../starter.js');
+var log = random();
+var logfile = "./"+log+".log";
+
 program
 .usage('[options] <file ...>')
 .option('-e, --environment [development|test|production]', 'Set program env.')
 .parse(process.argv);
+
 if(!program.args[1] && program.args[0]) {
+	process.stdout.pipe(logfile);
+	process.stderr.pipe(logfile);
 	options = {
 		file: path.normalize(process.cwd()+"/"+program.args[0]),
 		dir: path.dirname(path.normalize(process.cwd()+"/"+program.args[0]))
@@ -17,4 +23,15 @@ if(!program.args[1] && program.args[0]) {
 	}
 	starter.init(options);
 	starter.start();
+}
+
+function random() {
+	var text = "";
+	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+	for( var i=0; i < 5; i++ ) {
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+	}
+
+	return text;
 }
