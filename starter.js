@@ -50,7 +50,9 @@ starter.init = function(opts) {
 		});
 	}
 	global.opts = opts;
-	starter.watch();
+	if(opts.bower) {
+		starter.watch();
+	}
 }
 
 process.on('exit', function() {
