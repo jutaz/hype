@@ -64,14 +64,16 @@ starter.use_ssl = function() {
 	return false;
 }
 
-for (var i = 0; i < numberofWorkers; i++) {
-	cluster.fork({"ssl": starter.use_ssl(), "NODE_ENV": (conf.development) ? "development" : "production"});
-}
+starter.start = function() {
+	for (var i = 0; i < numberofWorkers; i++) {
+		cluster.fork({"ssl": starter.use_ssl(), "NODE_ENV": (conf.development) ? "development" : "production"});
+	}
 
-for (var i in cluster.workers){
-	cluster.workers[i].process.stdout.on('data', starter.outputData);
-	cluster.workers[i].process.stderr.on('data', starter.outputData);
-	cluster.workers[i].process.on('error', starter.clusterError);
+	for (var i in cluster.workers){
+		cluster.workers[i].process.stdout.on('data', starter.outputData);
+		cluster.workers[i].process.stderr.on('data', starter.outputData);
+		cluster.workers[i].process.on('error', starter.clusterError);
+	}
 }
 
 cluster.on('exit', function(worker, code, signal) {
